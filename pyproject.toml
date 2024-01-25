@@ -2,7 +2,7 @@
 # Use a fixed version because we use an experimental feature
 # (a custom plugin) and for now that functionality has
 # no compatibility promises.
-requires = ["scikit-build-core==0.4.4"]
+requires = ["scikit-build-core"]
 build-backend = "scikit_build_core.build"
 
 [project]
