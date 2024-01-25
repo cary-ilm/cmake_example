@@ -1,13 +1,19 @@
 cmake_minimum_required(VERSION 3.4...3.18)
 project(cmake_example)
 
-find_package(Python COMPONENTS Interpreter Development REQUIRED)
+find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)
 
-if(NOT TARGET Python::Python)
+get_cmake_property(_variableNames VARIABLES)
+list (SORT _variableNames)
+foreach (_variableName ${_variableNames})
+    message(STATUS "${_variableName}=${${_variableName}}")
+endforeach()
+
+if(NOT Python_FOUND)
   message(WARNING "Unable to find any python libraries")
   return()
 else()
-  message(STATUS "Found python libraries: ${Python_LIBRARIES}")
+  message(STATUS "Found python libraries: ${Python_LIBRARIES} @@@")
 endif()
 
 add_library (cmake_example SHARED main.cpp)
