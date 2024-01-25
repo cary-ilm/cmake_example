@@ -1,50 +1,46 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel",
-    "ninja",
-    "cmake>=3.12",
+# Use a fixed version because we use an experimental feature
+# (a custom plugin) and for now that functionality has
+# no compatibility promises.
+requires = ["scikit-build-core==0.4.4"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "cmake_example"
+dynamic = ["version"]
+
+authors = [
+  { name="Contributors to the MaterialX project", email="materialx-discussion@lists.aswf.io" },
 ]
-build-backend = "setuptools.build_meta"
+readme = "README.md"
+requires-python = ">=3.6"
 
-[tool.mypy]
-files = "setup.py"
-python_version = "3.7"
-strict = true
-show_error_codes = true
-enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
-warn_unreachable = true
-
-[[tool.mypy.overrides]]
-module = ["ninja"]
-ignore_missing_imports = true
-
-
-[tool.pytest.ini_options]
-minversion = "6.0"
-addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
-xfail_strict = true
-filterwarnings = [
-    "error",
-    "ignore:(ast.Str|Attribute s|ast.NameConstant|ast.Num) is deprecated:DeprecationWarning:_pytest",
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
 ]
-testpaths = ["tests"]
 
-[tool.cibuildwheel]
-test-command = "pytest {project}/tests"
-test-extras = ["test"]
-test-skip = ["*universal2:arm64"]
-# Setuptools bug causes collision between pypy and cpython artifacts
-before-build = "rm -rf {project}/build"
+[project.urls]
+"Homepage" = "https://materialx.org"
+"Source" = "https://github.com/AcademySoftwareFoundation/MaterialX"
+"Bug Tracker" = "https://github.com/AcademySoftwareFoundation/MaterialX/issues"
 
-[tool.ruff]
-target-version = "py37"
+[tool.scikit-build]
+cmake.minimum-version = "3.18"
+cmake.verbose = false
+cmake.build-type = "Release"
 
-[tool.ruff.lint]
-extend-select = [
-  "B",    # flake8-bugbear
-  "I",    # isort
-  "PGH",  # pygrep-hooks
-  "RUF",  # Ruff-specific
-  "UP",   # pyupgrade
-]
+# Uncoment when developing locally to enable inplace builds.
+# build-dir = "build/"
+
+logging.level = "DEBUG"
+
+[tool.scikit-build.cmake.define]
+MATERIALX_BUILD_SHARED_LIBS = 'OFF' # Be explicit
+MATERIALX_BUILD_PYTHON = 'ON'
+MATERIALX_TEST_RENDER = 'OFF'
+MATERIALX_WARNINGS_AS_ERRORS = 'ON'
+MATERIALX_BUILD_TESTS = 'OFF'
+# TODO: How could we harmonize this variable with SKBUILD?
+MATERIALX_INSTALL_PYTHON = 'OFF'
